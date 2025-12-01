@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class SimpleMessageListener {
 
     @KafkaListener(
-        topics = "order",
+        topics = "simple-messages",
         groupId = "simple-group",
         containerFactory = "stringKafkaListenerContainerFactory"
     )

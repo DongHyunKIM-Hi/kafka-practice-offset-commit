@@ -128,4 +128,37 @@ public class KafkaConfig {
         factory.setConsumerFactory(eventConsumerFactory());
         return factory;
     }
+
+    // Consumer 설정 (String, SimpleEvent) - JSON 역직렬화
+    @Bean
+    public ConsumerFactory<String, SimpleEvent> eventConsumerFactory2() {
+        Map<String, Object> props = new HashMap<>();
+
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "simple-event-group2");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+        // SimpleEvent 타입을 역직렬화하기 위한 JsonDeserializer 생성
+        JsonDeserializer<SimpleEvent> deserializer = new JsonDeserializer<>(SimpleEvent.class);
+
+        // 역직렬화를 허용할 패키지 지정 (보안 및 타입 안전성)
+        deserializer.addTrustedPackages("com.example.kafka.event");
+
+        return new DefaultKafkaConsumerFactory<>(
+            props,
+            new StringDeserializer(),
+            deserializer
+        );
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, SimpleEvent> eventKafkaListenerContainerFactory2() {
+
+        ConcurrentKafkaListenerContainerFactory<String, SimpleEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
+
+        factory.setConsumerFactory(eventConsumerFactory());
+        return factory;
+    }
 }
