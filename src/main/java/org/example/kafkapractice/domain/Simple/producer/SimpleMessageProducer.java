@@ -14,6 +14,6 @@ public class SimpleMessageProducer {
     private final KafkaTemplate<String, String> stringStringKafkaTemplate;
 
     public void send(String message) {
-        stringStringKafkaTemplate.send(TOPIC_ORDER, message);
+        stringStringKafkaTemplate.send(TOPIC_SIMPLE, message);
     }
 }
